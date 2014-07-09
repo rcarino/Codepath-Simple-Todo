@@ -9,14 +9,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.codepath.todoapp.R;
-
 public class EditItemActivity extends Activity {
     public static final int RESPONSE_OK = 0;
 
     private Button btnSave;
-    private String itemText;
     private int itemPos;
+
+    private EditText etEditPriority;
+    private EditText etEditDueDate;
     private EditText etEditInput;
 
     @Override
@@ -24,12 +24,18 @@ public class EditItemActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_item);
 
+        etEditPriority = (EditText) findViewById(R.id.etEditPriority);
+        etEditDueDate = (EditText) findViewById(R.id.etEditDueDate);
         etEditInput = (EditText) findViewById(R.id.etEditInput);
         btnSave = (Button) findViewById(R.id.btnSave);
 
-        itemText = getIntent().getStringExtra("itemText");
+        int priority = getIntent().getIntExtra("itemPriority", 0);
+        String dueDate = getIntent().getStringExtra("itemDueDate");
+        String itemText = getIntent().getStringExtra("itemText");
         itemPos = getIntent().getIntExtra("itemPos", 0);
 
+        etEditPriority.setText(Integer.toString(priority));
+        etEditDueDate.setText(dueDate);
         etEditInput.setText(itemText);
         etEditInput.requestFocus();
 
@@ -65,6 +71,8 @@ public class EditItemActivity extends Activity {
             @Override
             public void onClick(View button) {
                 Intent data = new Intent();
+                data.putExtra("itemPriority", Integer.parseInt(etEditPriority.getText().toString()));
+                data.putExtra("itemDueDate", etEditDueDate.getText().toString());
                 data.putExtra("itemText", etEditInput.getText().toString());
                 data.putExtra("itemPos", itemPos);
                 setResult(RESPONSE_OK, data);
